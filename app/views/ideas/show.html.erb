@@ -1,0 +1,64 @@
+<h1><%= @idea.title %></h1>
+
+<div class="">
+  <%= @idea.body %>
+  <p>
+    Idea created by: <%= @idea.user.full_name %>
+  </p>
+  <% @idea.images.each do |image|%>
+    <%= image_tag image.url, height:"100px" %>
+  <% end %>
+
+  <p>
+    Members: <%= @idea.members.map {|m| m.user.full_name}.join(", ") %>
+  </p>
+  <% if can? :manage, @idea %>
+    <%= link_to "Edit", edit_idea_path(@idea) %>
+    <%= link_to "Delete", idea_path(@idea), method: :delete, data: {confirm: "Are you sure?"} %>
+  <% end %>
+  <% unless @idea.user == current_user %>
+    <% if @idea.liked_by?(current_user) %>
+      <%= link_to fa_icon("star"), idea_like_path(@idea, @idea.like_for(current_user)), method: :delete, class: "bright-star" %>
+    <% else %>
+      <%= link_to fa_icon("star-o"), idea_likes_path(@idea), method: :post, class: "grey-star" %>
+    <% end %>
+  <% end %>
+  <% unless @idea.user == current_user %>
+    <% if @idea.member_by?(current_user) %>
+      <%= link_to "Joined", idea_member_path(@idea, @idea.member_for(current_user)), method: :delete%>
+    <% else %>
+      <%= link_to "Join", idea_members_path(@idea), method: :post %>
+    <% end %>
+  <% end %>
+  <p>
+    Likes: <%= @idea.likes.count %> | Members: <%= @idea.members.count %>
+  </p>
+
+  <h2>Comments</h2>
+  <% @idea.comments.each do |comment| %>
+      <div class="comment">
+          <%= comment.body %>
+          <p>
+            by: <%= comment.user.full_name %>
+          </p>
+        <% if can? :manage, comment %>
+          <%= link_to "Delete", idea_comment_path(@idea, comment),
+          method: :delete,
+          data: {confirm: "Are you sure?"}%>
+        <% end %>
+      <hr>
+      </div>
+  <% end %>
+
+  <% if user_signed_in? %>
+    <h3>New Comment</h3>
+    <div class="form-container">
+      <%= bootstrap_form_for [@idea, @comment] do |f| %>
+      <div class="input-container">
+          <%= f.text_area :body, {rows: 8, placeholder: "Enter the full comment text here"}  %>
+      </div>
+      <%= f.submit class: "btn btn-primary"%>
+      <% end %>
+  <% end %>
+
+</div>

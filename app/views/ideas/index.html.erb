@@ -1,0 +1,16 @@
+<h1>Ideas</h1>
+<%= paginate @ideas %>
+<% @ideas.each do |idea| %>
+  <%= link_to idea.title, idea_path(idea) %>
+  <p>
+    <%= idea.body %>
+  </p>
+  <p>
+    by: <%= idea.user.full_name %>
+  </p>
+  <p>
+    Likes: <%= idea.likes.count %> | Members: <%= idea.members.count %>
+  </p>
+      <hr>
+<% end %>
+<%= paginate @ideas %>

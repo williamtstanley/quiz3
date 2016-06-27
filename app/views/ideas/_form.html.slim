@@ -1,0 +1,8 @@
+<!-- fix this for edit and create -->
+h1 New Idea
+= bootstrap_form_for @idea do |f|
+  = f.text_field :title
+  = f.text_area :body
+  = f.file_field :images, multiple: true
+  = f.submit class: "btn btn-primary"
+

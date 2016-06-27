@@ -1,0 +1,16 @@
+div class="user-form-container"
+  div class="user-form"
+    - if user_signed_in?
+      h1 Update User info
+    - else
+      h1 Create new User account
+    = bootstrap_form_for @user do |f|
+      = f.text_field :first_name, placeholder: "First Name"
+      = f.text_field :last_name, placeholder: "Last Name"
+      = f.email_field :email, placeholder: "Email Address"
+      - if !user_signed_in?
+        = f.password_field :password, placeholder: "Password"
+        = f.password_field :password_confirmation, placeholder: "Confirm Password"
+      - else
+        <!-- <span> <%#= link_to "Change Password", change_password_path %></span> -->
+      = f.submit class: "btn btn-primary"
